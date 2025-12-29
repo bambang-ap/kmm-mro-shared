@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { type Roles } from '@shared/constants';
+import { UserResponse } from '@shared/types/backend';
 
 interface User {
 	uuid: string;
@@ -18,7 +19,7 @@ interface User {
 }
 
 export interface AuthState {
-	user: User | null;
+	user: UserResponse | null;
 	accessToken: string | null;
 	refreshToken: string | null;
 	isAuthenticated: boolean;
@@ -60,7 +61,7 @@ const authSlice = createSlice({
 		setCredentials: (
 			state,
 			action: PayloadAction<{
-				user: User;
+				user: UserResponse;
 				accessToken: string;
 				refreshToken: string;
 			}>
