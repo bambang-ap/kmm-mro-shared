@@ -1,0 +1,61 @@
+┣ 📂api
+┃ ┣ 📜floorAreas.ts
+┃ ┣ 📜helper.ts
+┃ ┣ 📜index.ts
+┃ ┣ 📜locations.ts
+┃ ┣ 📜menus.ts
+┃ ┣ 📜README.md
+┃ ┣ 📜roles.ts
+┃ ┣ 📜roomAreas.ts
+┃ ┣ 📜ticketDetail.ts
+┃ ┗ 📜workCategories.ts
+┣ 📂components
+┃ ┣ 📂ui
+┃ ┃ ┣ 📜Button.tsx
+┃ ┃ ┣ 📜FileInput.tsx
+┃ ┃ ┣ 📜index.ts
+┃ ┃ ┗ 📜Input.tsx
+┃ ┣ 📜Badge.tsx
+┃ ┣ 📜index.ts
+┃ ┗ 📜TicketActionButtons.tsx
+┣ 📂constants
+┃ ┣ 📜index.ts
+┃ ┗ 📜queryKey.ts
+┣ 📂hooks
+┃ ┣ 📜index.ts
+┃ ┣ 📜useAuthData.ts
+┃ ┣ 📜useBool.ts
+┃ ┗ 📜useLogout.ts
+┣ 📂redux
+┃ ┣ 📂slices
+┃ ┃ ┗ 📜authSlice.ts
+┃ ┣ 📜hooks.ts
+┃ ┣ 📜index.ts
+┃ ┣ 📜provider.tsx
+┃ ┗ 📜store.ts
+┣ 📂tanstack
+┃ ┣ 📜assignees.ts
+┃ ┣ 📜floorAreas.ts
+┃ ┣ 📜index.ts
+┃ ┣ 📜locations.ts
+┃ ┣ 📜menus.ts
+┃ ┣ 📜reasonPendings.ts
+┃ ┣ 📜reasonRejects.ts
+┃ ┣ 📜reasonTransfers.ts
+┃ ┣ 📜roles.ts
+┃ ┣ 📜roomAreas.ts
+┃ ┣ 📜stores.ts
+┃ ┣ 📜ticketPriorities.ts
+┃ ┣ 📜tickets.ts
+┃ ┣ 📜users.ts
+┃ ┗ 📜workCategories.ts
+┣ 📂types
+┃ ┗ 📜backend.ts
+┣ 📂utils
+┃ ┣ 📜cn.ts
+┃ ┣ 📜fileValidation.ts
+┃ ┣ 📜index.ts
+┃ ┗ 📜navigator.ts
+┣ 📜filetree.txt
+┣ 📜index.ts
+┗ 📜README.md

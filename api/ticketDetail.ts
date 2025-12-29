@@ -1,0 +1,398 @@
+import type {
+	TicketListResponse,
+	TicketDetailResponse,
+	TicketActivityListResponse,
+	TicketHistoryListResponse,
+	CreateActivityRequest,
+	CreateActivityResponse,
+	UpdateActivityRequest,
+	UpdateActivityResponse,
+	AssignTicketFormData,
+} from '../types/backend';
+import apiRequest from './helper';
+
+export const ticketApi = {
+	/**
+	 * Create Ticket
+	 * POST /api/v1/tickets
+	 */
+	createTicket: async (
+		formData: FormData
+	): Promise<{
+		success: boolean;
+		message: string;
+		data: { ticket_number: string };
+	}> => {
+		return apiRequest('/tickets', {
+			method: 'POST',
+			body: formData,
+			content: 'form',
+		});
+	},
+
+	/**
+	 * Get All Tickets
+	 * GET /api/v1/tickets?page=1&page_size=10
+	 */
+	getAllTickets: async (
+		page: number = 1,
+		pageSize: number = 10,
+		search?: string,
+		status?: string,
+		priorityId?: string,
+		sortBy?: string,
+		sortOrder?: 'ASC' | 'DESC',
+		startDate?: string,
+		endDate?: string,
+		isAdmin = true
+	): Promise<TicketListResponse> => {
+		let url = `${
+			isAdmin ? '/admin' : ''
+		}/tickets?page=${page}&page_size=${pageSize}`;
+		if (search && search.trim()) {
+			const searchTerm = encodeURIComponent(search.trim());
+			url += `&search=${searchTerm}`;
+		}
+		if (status && status !== 'all') {
+			url += `&status=${status}`;
+		}
+		if (priorityId) {
+			url += `&priority_id=${priorityId}`;
+		}
+		if (sortBy && sortOrder) {
+			url += `&sort=${sortBy}&order=${sortOrder}`;
+		}
+		if (startDate) {
+			url += `&start_date=${startDate}`;
+		}
+		if (endDate) {
+			url += `&end_date=${endDate}`;
+		}
+		return apiRequest<TicketListResponse>(url);
+	},
+
+	/**
+	 * Get Ticket Detail
+	 * GET /api/v1/admin/tickets/:id
+	 */
+	getTicketDetail: async (
+		id: string,
+		isAdmin = true
+	): Promise<TicketDetailResponse> => {
+		return apiRequest<TicketDetailResponse>(
+			`${isAdmin ? '/admin' : ''}/tickets/${id}`
+		);
+	},
+
+	/**
+	 * Get Ticket Activities
+	 * GET /api/v1/admin/tickets/:ticket_id/activities?page=1&page_size=10
+	 */
+	getTicketActivities: async (
+		ticketId: string,
+		page: number = 1,
+		pageSize: number = 10,
+		isAdmin = true
+	): Promise<TicketActivityListResponse> => {
+		return apiRequest<TicketActivityListResponse>(
+			`${
+				isAdmin ? '/admin' : ''
+			}/tickets/${ticketId}/activities?page=${page}&page_size=${pageSize}`
+		);
+	},
+
+	/**
+	 * Get Ticket Histories
+	 * GET /api/v1/admin/tickets/:ticket_id/histories?page=1&page_size=10
+	 */
+	getTicketHistories: async (
+		ticketId: string,
+		page: number = 1,
+		pageSize: number = 10,
+		isAdmin = true
+	): Promise<TicketHistoryListResponse> => {
+		return apiRequest<TicketHistoryListResponse>(
+			`${
+				isAdmin ? '/admin' : ''
+			}/tickets/${ticketId}/histories?page=${page}&page_size=${pageSize}`
+		);
+	},
+
+	/**
+	 * Get Ticket Status Count
+	 * GET /api/v1/admin/tickets/status-count
+	 */
+	getStatusCount: async (): Promise<{
+		success: boolean;
+		message: string;
+		data: {
+			all: number;
+			open: number;
+			request_to_transfer: number;
+			in_progress: number;
+			pending: number;
+			breach: number;
+			resolved: number;
+		};
+	}> => {
+		return apiRequest<{
+			success: boolean;
+			message: string;
+			data: {
+				all: number;
+				open: number;
+				request_to_transfer: number;
+				in_progress: number;
+				pending: number;
+				breach: number;
+				resolved: number;
+			};
+		}>('/admin/tickets/status-count');
+	},
+
+	/**
+	 * Create Activity
+	 * POST /api/v1/admin/tickets/:ticket_number/activities
+	 */
+	createActivity: async (
+		ticketNumber: string,
+		data: CreateActivityRequest,
+		isAdmin = true
+	): Promise<CreateActivityResponse> => {
+		return apiRequest<CreateActivityResponse>(
+			`${isAdmin ? '/admin' : ''}/tickets/${ticketNumber}/activities`,
+			{
+				method: 'POST',
+				body: JSON.stringify(data),
+			}
+		);
+	},
+
+	/**
+	 * Update Activity
+	 * PUT /api/v1/admin/tickets/:ticket_number/activities/:activity_id
+	 */
+	updateActivity: async (
+		ticketNumber: string,
+		activityId: string,
+		data: UpdateActivityRequest,
+		isAdmin = true
+	): Promise<UpdateActivityResponse> => {
+		return apiRequest<UpdateActivityResponse>(
+			`${
+				isAdmin ? '/admin' : ''
+			}/tickets/${ticketNumber}/activities/${activityId}`,
+			{
+				method: 'PUT',
+				body: JSON.stringify(data),
+			}
+		);
+	},
+
+	/**
+	 * Assign Ticket
+	 * PUT /api/v1/admin/tickets/:ticket_number/assign
+	 */
+	assignTicket: async (
+		ticketNumber: string,
+		data: AssignTicketFormData,
+		isAdmin = true
+	): Promise<{ success: boolean; message: string }> => {
+		return apiRequest<{ success: boolean; message: string }>(
+			`${isAdmin ? '/admin' : ''}/tickets/${ticketNumber}/assign`,
+			{
+				method: 'PUT',
+				body: JSON.stringify(data),
+			}
+		);
+	},
+
+	/**
+	 * Reject Ticket
+	 * PUT /api/v1/admin/tickets/:ticket_number/reject
+	 */
+	rejectTicket: async (
+		ticketNumber: string,
+		data: {
+			remarks: string;
+			reasonId: string;
+		},
+		isAdmin = true
+	): Promise<{ success: boolean; message: string }> => {
+		return apiRequest<{ success: boolean; message: string }>(
+			`${isAdmin ? '/admin' : ''}/tickets/${ticketNumber}/reject`,
+			{
+				method: 'PUT',
+				body: JSON.stringify(data),
+			}
+		);
+	},
+
+	/**
+	 * Pending Ticket
+	 * PUT /api/v1/admin/tickets/:ticket_number/pending
+	 */
+	pendingTicket: async (
+		ticketNumber: string,
+		data: {
+			remarks: string;
+			reasonId: string;
+		},
+		isAdmin = true
+	): Promise<{ success: boolean; message: string }> => {
+		const { reasonId, remarks } = data;
+		return apiRequest<{ success: boolean; message: string }>(
+			`${isAdmin ? '/admin' : ''}/tickets/${ticketNumber}/pending`,
+			{
+				method: 'PUT',
+				body: JSON.stringify({ remarks, reason_pending_uuid: reasonId }),
+			}
+		);
+	},
+
+	/**
+	 * Escalate Ticket
+	 * PUT /api/v1/admin/tickets/:ticket_number/escalate
+	 */
+	escalateTicket: async (
+		ticketNumber: string,
+		isAdmin = true
+	): Promise<{ success: boolean; message: string }> => {
+		return apiRequest<{ success: boolean; message: string }>(
+			`${isAdmin ? '/admin' : ''}/tickets/${ticketNumber}/escalate`,
+			{ method: 'POST' }
+		);
+	},
+
+	/**
+	 * Acknowledge Ticket
+	 * PUT /api/v1/tickets/:ticket_number/acknowledge
+	 */
+	acknowledgeTicket: async (
+		ticketNumber: string,
+		isAdmin = false
+	): Promise<{ success: boolean; message: string }> => {
+		return apiRequest<{ success: boolean; message: string }>(
+			`${isAdmin ? '/admin' : ''}/tickets/${ticketNumber}/start`,
+			{
+				method: 'PUT',
+			}
+		);
+	},
+
+	/**
+	 * Resume Ticket
+	 * PUT /api/v1/tickets/:ticket_number/resume
+	 */
+	resumeTicket: async (
+		ticketNumber: string,
+		isAdmin = false
+	): Promise<{ success: boolean; message: string }> => {
+		return apiRequest<{ success: boolean; message: string }>(
+			`${isAdmin ? '/admin' : ''}/tickets/${ticketNumber}/resume`,
+			{
+				method: 'PUT',
+			}
+		);
+	},
+
+	/**
+	 * Resolve Ticket
+	 * PUT /api/v1/tickets/:ticket_number/resolve
+	 */
+	resolveTicket: async (
+		ticketNumber: string,
+		formData: FormData,
+		isAdmin = false
+	) => {
+		return apiRequest<{ success: boolean; message: string }>(
+			`${isAdmin ? '/admin' : ''}/tickets/${ticketNumber}/resolve`,
+			{
+				method: 'PUT',
+				body: formData,
+				content: 'form',
+			}
+		);
+	},
+
+	/**
+	 * Transfer Ticket
+	 * PUT /api/v1/tickets/:ticket_number/transfer
+	 */
+	transferTicket: async (
+		ticketNumber: string,
+		data: { reason_transfer_id: string; remarks: string },
+		isAdmin = false
+	): Promise<{ success: boolean; message: string }> => {
+		const { reason_transfer_id, remarks } = data;
+		return apiRequest<{ success: boolean; message: string }>(
+			`${isAdmin ? '/admin' : ''}/tickets/${ticketNumber}/request-transfer`,
+			{
+				method: 'PUT',
+				body: JSON.stringify({
+					reason_transfer_uuid: reason_transfer_id,
+					remarks,
+				}),
+			}
+		);
+	},
+
+	/**
+	 * Complete Activity
+	 * PUT /api/v1/tickets/:ticket_number/activities/:activity_id/complete
+	 */
+	completeActivity: async (
+		ticketNumber: string,
+		activityId: string,
+		isAdmin = false
+	): Promise<{ success: boolean; message: string }> => {
+		return apiRequest<{ success: boolean; message: string }>(
+			`${
+				isAdmin ? '/admin' : ''
+			}/tickets/${ticketNumber}/activities/${activityId}/complete`,
+			{
+				method: 'PUT',
+			}
+		);
+	},
+
+	/**
+	 * Reject Transfer Ticket
+	 * PUT /api/v1/admin/tickets/:ticket_number/reject-transfer
+	 */
+	rejectTransferTicket: async (
+		ticketNumber: string,
+		data: {
+			remarks: string;
+			reasonId: string;
+		},
+		isAdmin = true
+	): Promise<{ success: boolean; message: string }> => {
+		return apiRequest<{ success: boolean; message: string }>(
+			`${isAdmin ? '/admin' : ''}/tickets/${ticketNumber}/reject-transfer`,
+			{
+				method: 'PUT',
+				body: JSON.stringify(data),
+			}
+		);
+	},
+
+	/**
+	 * Delete Activity
+	 * DELETE /api/v1/admin/tickets/:ticket_number/activities/:activity_uuid
+	 */
+	deleteActivity: async (
+		ticketNumber: string,
+		activityId: string,
+		isAdmin = true
+	): Promise<{ success: boolean; message: string }> => {
+		return apiRequest<{ success: boolean; message: string }>(
+			`${
+				isAdmin ? '/admin' : ''
+			}/tickets/${ticketNumber}/activities/${activityId}`,
+			{
+				method: 'DELETE',
+			}
+		);
+	},
+};
