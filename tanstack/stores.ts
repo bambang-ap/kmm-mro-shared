@@ -2,10 +2,10 @@
  * Tanstack Query hooks for Store API
  */
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { storeApi } from "../api";
-import type { StoreListResponse, StoreResponse } from "../types/backend";
-import { QUERY_KEYS } from "../constants/queryKey";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { storeApi } from '../api';
+import type { StoreListResponse, StoreResponse } from '../types/backend';
+import { QUERY_KEYS } from '../constants/queryKey';
 
 /**
  * Hook to get all active stores
@@ -16,7 +16,7 @@ export const useGetStores = (
 	pageSize: number = 10,
 	search?: string,
 	sortBy?: string,
-	sortOrder?: "ASC" | "DESC"
+	sortOrder?: 'ASC' | 'DESC'
 ) => {
 	return useQuery<StoreListResponse>({
 		queryKey: [

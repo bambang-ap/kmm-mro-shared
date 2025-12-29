@@ -1,6 +1,6 @@
 import { EyeIcon, EyeSlashIcon } from '@phosphor-icons/react';
 import { useBool } from '@shared/hooks/useBool';
-import React, { forwardRef } from 'react';
+import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
