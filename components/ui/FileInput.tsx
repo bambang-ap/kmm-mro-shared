@@ -7,6 +7,11 @@ import {
 	type Path,
 } from 'react-hook-form';
 import { cn } from '@shared/utils';
+import { useBool } from '@shared/hooks/useBool';
+import { useIsMobile } from '@shared/hooks/useIsMobile';
+import { Modal } from '@shared/components';
+
+type FileInputMode = 'camera' | 'file' | 'both';
 
 interface BaseFileInputProps {
 	label?: string;
@@ -15,6 +20,7 @@ interface BaseFileInputProps {
 	accept?: string;
 	capture?: 'user' | 'environment';
 	onError?: (error: string) => void;
+	mode?: FileInputMode;
 }
 
 interface ControlledFileInputProps<T extends FieldValues>
@@ -43,6 +49,7 @@ function FileInputInner({
 	error,
 	accept = 'image/*',
 	capture = 'environment',
+	mode = 'both',
 	value = [],
 	onChange,
 	onError,
@@ -54,12 +61,16 @@ function FileInputInner({
 	error?: string;
 	accept?: string;
 	capture?: 'user' | 'environment';
+	mode?: FileInputMode;
 	value?: File[];
 	onChange?: (files: File[]) => void;
 	onError?: (error: string) => void;
 }) {
-	const inputId = useId();
+	const cameraInputId = useId();
+	const fileInputId = useId();
 	const [previews, setPreviews] = useState<string[]>([]);
+	const modal = useBool();
+	const isMobile = useIsMobile();
 
 	useEffect(() => {
 		// Generate previews when files change
@@ -106,6 +117,38 @@ function FileInputInner({
 		onChange?.(newFiles);
 	};
 
+	const handleMainClick = () => {
+		if (disabled) return;
+
+		// Di desktop, camera dan both mode jadi file picker
+		if (!isMobile && (mode === 'camera' || mode === 'both')) {
+			document.getElementById(fileInputId)?.click();
+			return;
+		}
+
+		if (mode === 'both') {
+			modal.setTrue();
+		} else if (mode === 'camera') {
+			document.getElementById(cameraInputId)?.click();
+		} else {
+			document.getElementById(fileInputId)?.click();
+		}
+	};
+
+	const handleSelectCamera = () => {
+		modal.setFalse();
+		setTimeout(() => {
+			document.getElementById(cameraInputId)?.click();
+		}, 100);
+	};
+
+	const handleSelectFile = () => {
+		modal.setFalse();
+		setTimeout(() => {
+			document.getElementById(fileInputId)?.click();
+		}, 100);
+	};
+
 	return (
 		<div>
 			{label && (
@@ -115,7 +158,7 @@ function FileInputInner({
 			)}
 
 			<div
-				onClick={() => !disabled && document.getElementById(inputId)?.click()}
+				onClick={handleMainClick}
 				className={cn(
 					'border-2 border-dashed border-[#8FD8D2] rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50 transition-colors',
 					disabled && 'opacity-50 cursor-not-allowed',
@@ -129,18 +172,60 @@ function FileInputInner({
 				<div className="text-xs text-gray-500 mt-1">
 					{value.length}/{maxFiles} foto dipilih
 				</div>
-				<input
-					id={inputId}
-					name={name}
-					type="file"
-					accept={accept}
-					capture={capture}
-					multiple={maxFiles > 1}
-					disabled={disabled || value.length >= maxFiles}
-					onChange={handleFileChange}
-					className="hidden"
-				/>
 			</div>
+
+			{/* Hidden inputs */}
+			<input
+				id={cameraInputId}
+				name={name}
+				type="file"
+				accept={accept}
+				capture={capture}
+				multiple={maxFiles > 1}
+				disabled={disabled || value.length >= maxFiles}
+				onChange={handleFileChange}
+				className="hidden"
+			/>
+			<input
+				id={fileInputId}
+				name={name}
+				type="file"
+				accept={accept}
+				multiple={maxFiles > 1}
+				disabled={disabled || value.length >= maxFiles}
+				onChange={handleFileChange}
+				className="hidden"
+			/>
+
+			{/* Modal for selection */}
+			<Modal {...modal} title="Pilih Sumber">
+				<div className="space-y-3">
+					<button
+						type="button"
+						onClick={handleSelectCamera}
+						className="w-full flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-[#8FD8D2] hover:bg-gray-50 transition-colors"
+					>
+						<div className="text-2xl">📷</div>
+						<div className="text-left">
+							<div className="font-medium">Kamera</div>
+							<div className="text-sm text-gray-500">Ambil foto langsung</div>
+						</div>
+					</button>
+					<button
+						type="button"
+						onClick={handleSelectFile}
+						className="w-full flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-[#8FD8D2] hover:bg-gray-50 transition-colors"
+					>
+						<div className="text-2xl">📁</div>
+						<div className="text-left">
+							<div className="font-medium">Pilih File</div>
+							<div className="text-sm text-gray-500">
+								Upload dari galeri/file
+							</div>
+						</div>
+					</button>
+				</div>
+			</Modal>
 
 			{error && <p className="mt-1 text-sm text-red-500">{error}</p>}
 
