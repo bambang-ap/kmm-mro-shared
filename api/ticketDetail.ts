@@ -74,7 +74,7 @@ export const ticketApi = {
 		if (priority_uuid) {
 			url += `&priority_uuid=${priority_uuid}`;
 		}
-		if (priority_uuid) {
+		if (status_uuid) {
 			url += `&status_uuid=${status_uuid}`;
 		}
 		if (sort && order) {
