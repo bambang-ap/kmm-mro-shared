@@ -34,39 +34,48 @@ export const ticketApi = {
 	 * Get All Tickets
 	 * GET /api/v1/tickets?page=1&page_size=10
 	 */
-	getAllTickets: async (
-		page: number = 1,
-		pageSize: number = 10,
-		search?: string,
-		status?: string,
-		priorityId?: string,
-		sortBy?: string,
-		sortOrder?: 'ASC' | 'DESC',
-		startDate?: string,
-		endDate?: string,
-		isAdmin = true
-	): Promise<TicketListResponse> => {
+	getAllTickets: async (params: {
+		page: number;
+		page_size: number;
+		search?: string;
+		sort?: string;
+		order?: 'asc' | 'desc';
+		priority_uuid?: string;
+		start_date?: string;
+		end_date?: string;
+		is_admin?: boolean;
+	}): Promise<TicketListResponse> => {
+		const {
+			page,
+			page_size,
+			search,
+			sort,
+			order,
+			priority_uuid,
+			start_date,
+			end_date,
+			is_admin = true,
+		} = params;
+
 		let url = `${
-			isAdmin ? '/admin' : ''
-		}/tickets?page=${page}&page_size=${pageSize}`;
+			is_admin ? '/admin' : ''
+		}/tickets?page=${page}&page_size=${page_size}`;
+
 		if (search && search.trim()) {
 			const searchTerm = encodeURIComponent(search.trim());
 			url += `&search=${searchTerm}`;
 		}
-		if (status && status !== 'all') {
-			url += `&status=${status}`;
+		if (priority_uuid) {
+			url += `&priority_uuid=${priority_uuid}`;
 		}
-		if (priorityId) {
-			url += `&priority_id=${priorityId}`;
+		if (sort && order) {
+			url += `&sort=${sort}&order=${order}`;
 		}
-		if (sortBy && sortOrder) {
-			url += `&sort=${sortBy}&order=${sortOrder}`;
+		if (start_date) {
+			url += `&start_date=${start_date}`;
 		}
-		if (startDate) {
-			url += `&start_date=${startDate}`;
-		}
-		if (endDate) {
-			url += `&end_date=${endDate}`;
+		if (end_date) {
+			url += `&end_date=${end_date}`;
 		}
 		return apiRequest<TicketListResponse>(url);
 	},

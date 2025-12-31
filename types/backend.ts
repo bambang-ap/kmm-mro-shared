@@ -1019,6 +1019,7 @@ export interface TicketDetailData {
 	store_id: number;
 	store_name: string;
 	requester_name: string;
+	store_phone_number: string;
 	store_address: string;
 	work_category_id: number;
 	work_category_name: string;

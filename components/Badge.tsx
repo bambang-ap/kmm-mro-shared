@@ -26,12 +26,15 @@ export const Badge: React.FC<BadgeProps> = ({ status, className = '' }) => {
 			case 'pending':
 				return 'bg-orange-500 text-white';
 			case 'resolved':
+			case 'completed':
 				return 'bg-green-600 text-white';
+			case 'request to transfer':
 			case 'request_to_transfer':
 				return 'bg-red-600 text-white';
 			case 'transferred':
 				return 'bg-teal-600 text-white';
 			case 'rejected':
+			case 'reject':
 				return 'bg-gray-600 text-white';
 			case 'closed':
 				return 'bg-green-50 text-green-600';

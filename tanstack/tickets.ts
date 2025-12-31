@@ -8,45 +8,33 @@ import type {
 	TicketHistoryListResponse,
 } from '../types/backend';
 
-export const useTickets = (
-	page: number,
-	pageSize: number,
-	search?: string,
-	status?: string,
-	priorityId?: string,
-	sortBy?: string,
-	sortOrder?: 'ASC' | 'DESC',
-	startDate?: string,
-	endDate?: string,
-	isAdmin?: boolean
-) => {
+export interface UseTicketsParams {
+	page: number;
+	page_size: number;
+	search?: string;
+	sort?: string;
+	order?: 'asc' | 'desc';
+	priority_uuid?: string;
+	start_date?: string;
+	end_date?: string;
+	is_admin?: boolean;
+}
+
+export const useTickets = (params: UseTicketsParams) => {
 	return useQuery({
 		queryKey: [
 			QUERY_KEYS.TICKETS,
-			isAdmin ? 'Admin' : 'User',
-			page,
-			pageSize,
-			search,
-			status,
-			priorityId,
-			sortBy,
-			sortOrder,
-			startDate,
-			endDate,
+			params.is_admin ? 'Admin' : 'User',
+			params.page,
+			params.page_size,
+			params.search,
+			params.sort,
+			params.order,
+			params.priority_uuid,
+			params.start_date,
+			params.end_date,
 		],
-		queryFn: () =>
-			ticketApi.getAllTickets(
-				page,
-				pageSize,
-				search,
-				status,
-				priorityId,
-				sortBy,
-				sortOrder,
-				startDate,
-				endDate,
-				isAdmin
-			),
+		queryFn: () => ticketApi.getAllTickets(params),
 		staleTime: 1000 * 60 * 5, // 5 minutes
 	});
 };
