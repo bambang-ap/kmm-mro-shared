@@ -1,0 +1,21 @@
+{
+  "name": "kmm-mro-shared",
+  "version": "1.0.0",
+  "description": "This folder contains all shared API services, TanStack Query hooks, Redux store, types, and constants that can be used across multiple projects (CMS and WebApp).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bambang-ap/kmm-mro-shared.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/bambang-ap/kmm-mro-shared/issues"
+  },
+  "homepage": "https://github.com/bambang-ap/kmm-mro-shared#readme"
+}
