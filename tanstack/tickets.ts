@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { ticketApi } from '../api';
+import { GetAllTicketsParams, ticketApi } from '../api';
 import { QUERY_KEYS } from '../constants/queryKey';
 import { queryClient } from './index';
 import type {
@@ -8,19 +8,7 @@ import type {
 	TicketHistoryListResponse,
 } from '../types/backend';
 
-export interface UseTicketsParams {
-	page: number;
-	page_size: number;
-	search?: string;
-	sort?: string;
-	order?: 'asc' | 'desc';
-	priority_uuid?: string;
-	start_date?: string;
-	end_date?: string;
-	is_admin?: boolean;
-}
-
-export const useTickets = (params: UseTicketsParams) => {
+export const useTickets = (params: GetAllTicketsParams) => {
 	return useQuery({
 		queryKey: [
 			QUERY_KEYS.TICKETS,
@@ -39,10 +27,10 @@ export const useTickets = (params: UseTicketsParams) => {
 	});
 };
 
-export const useTicketStatusCount = () => {
+export const useTicketStatusCount = (search?: string) => {
 	return useQuery({
-		queryKey: QUERY_KEYS.TICKET_STATUS_COUNT,
-		queryFn: () => ticketApi.getStatusCount(),
+		queryKey: [QUERY_KEYS.TICKET_STATUS_COUNT, search],
+		queryFn: () => ticketApi.getStatusCount(search),
 		staleTime: 1000 * 60 * 5, // 5 minutes
 	});
 };

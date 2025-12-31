@@ -11,6 +11,19 @@ import type {
 } from '../types/backend';
 import apiRequest from './helper';
 
+export type GetAllTicketsParams = {
+	page: number;
+	page_size: number;
+	search?: string;
+	sort?: string;
+	order?: 'asc' | 'desc';
+	priority_uuid?: string;
+	status_uuid?: string;
+	start_date?: string;
+	end_date?: string;
+	is_admin?: boolean;
+};
+
 export const ticketApi = {
 	/**
 	 * Create Ticket
@@ -34,17 +47,9 @@ export const ticketApi = {
 	 * Get All Tickets
 	 * GET /api/v1/tickets?page=1&page_size=10
 	 */
-	getAllTickets: async (params: {
-		page: number;
-		page_size: number;
-		search?: string;
-		sort?: string;
-		order?: 'asc' | 'desc';
-		priority_uuid?: string;
-		start_date?: string;
-		end_date?: string;
-		is_admin?: boolean;
-	}): Promise<TicketListResponse> => {
+	getAllTickets: async (
+		params: GetAllTicketsParams
+	): Promise<TicketListResponse> => {
 		const {
 			page,
 			page_size,
@@ -55,6 +60,7 @@ export const ticketApi = {
 			start_date,
 			end_date,
 			is_admin = true,
+			status_uuid,
 		} = params;
 
 		let url = `${
@@ -67,6 +73,9 @@ export const ticketApi = {
 		}
 		if (priority_uuid) {
 			url += `&priority_uuid=${priority_uuid}`;
+		}
+		if (priority_uuid) {
+			url += `&status_uuid=${status_uuid}`;
 		}
 		if (sort && order) {
 			url += `&sort=${sort}&order=${order}`;
@@ -131,7 +140,9 @@ export const ticketApi = {
 	 * Get Ticket Status Count
 	 * GET /api/v1/admin/tickets/status-count
 	 */
-	getStatusCount: async (): Promise<{
+	getStatusCount: async (
+		search?: string
+	): Promise<{
 		success: boolean;
 		message: string;
 		data: {
@@ -156,7 +167,7 @@ export const ticketApi = {
 				breach: number;
 				resolved: number;
 			};
-		}>('/admin/tickets/status-count');
+		}>(`/admin/tickets/status-count?search=${search}`);
 	},
 
 	/**
