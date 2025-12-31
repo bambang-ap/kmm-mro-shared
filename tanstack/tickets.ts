@@ -27,10 +27,10 @@ export const useTickets = (params: GetAllTicketsParams) => {
 	});
 };
 
-export const useTicketStatusCount = (search?: string) => {
+export const useTicketStatusCount = (search?: string, isAdmin?: boolean) => {
 	return useQuery({
 		queryKey: [QUERY_KEYS.TICKET_STATUS_COUNT, search],
-		queryFn: () => ticketApi.getStatusCount(search),
+		queryFn: () => ticketApi.getStatusCount(search, isAdmin),
 		staleTime: 1000 * 60 * 5, // 5 minutes
 	});
 };
