@@ -34,7 +34,7 @@ const loadAuthFromStorage = (): AuthState => {
 
 		if (accessToken && refreshToken && userStr) {
 			return {
-				user: JSON.parse(userStr),
+				user: JSON.parse(userStr) as UserResponse,
 				accessToken,
 				refreshToken,
 				isAuthenticated: true,
