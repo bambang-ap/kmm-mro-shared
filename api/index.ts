@@ -44,6 +44,7 @@ import type {
 	CreateUserRequest,
 	UpdateUserRequest,
 } from '../types/backend';
+import { AssignType } from '../types/backend';
 import apiRequest from './helper';
 
 // ============================================================================
@@ -1072,7 +1073,7 @@ export const assigneeApi = {
 	 * Get Assignees by Type
 	 * GET /api/v1/assignees?type=vendor|internal
 	 */
-	getAssignees: async (type: 'vendor' | 'internal') => {
+	getAssignees: async (type: AssignType) => {
 		return apiRequest<{
 			total: number;
 			data:

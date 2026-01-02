@@ -1,5 +1,6 @@
 export * from './cn';
 export * from './navigator';
+export * from './assignType';
 
 export function getGreeting(date = new Date()) {
 	const hour = date.getHours();

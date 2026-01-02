@@ -248,11 +248,12 @@ export const ticketApi = {
 		},
 		isAdmin = true
 	): Promise<{ success: boolean; message: string }> => {
+		const { reasonId, remarks } = data;
 		return apiRequest<{ success: boolean; message: string }>(
 			`${isAdmin ? '/admin' : ''}/tickets/${ticketNumber}/reject`,
 			{
 				method: 'PUT',
-				body: JSON.stringify(data),
+				body: JSON.stringify({ remarks, reason_reject_uuid: reasonId }),
 			}
 		);
 	},
@@ -397,11 +398,12 @@ export const ticketApi = {
 		},
 		isAdmin = true
 	): Promise<{ success: boolean; message: string }> => {
+		const { reasonId, remarks } = data;
 		return apiRequest<{ success: boolean; message: string }>(
 			`${isAdmin ? '/admin' : ''}/tickets/${ticketNumber}/reject-transfer`,
 			{
 				method: 'PUT',
-				body: JSON.stringify(data),
+				body: JSON.stringify({ remarks, reason_reject_uuid: reasonId }),
 			}
 		);
 	},

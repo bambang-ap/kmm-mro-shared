@@ -25,6 +25,11 @@ export type TicketStatus =
 	| 'rejected';
 export type Priority = 'low' | 'medium' | 'high';
 
+export enum AssignType {
+	VENDOR = 'vendor',
+	INTERNAL = 'internal',
+}
+
 export interface LoginRequest {
 	email: string;
 	password: string;
@@ -1126,7 +1131,7 @@ export type UpdateActivityResponse = CreateActivityResponse;
 
 export interface AssignTicketFormData {
 	priority_uuid: string;
-	assign_type: 'vendor' | 'internal';
+	assign_type: AssignType;
 	assignee_uuid: string;
 	vendor_name?: string;
 	vendor_pic_name?: string;
