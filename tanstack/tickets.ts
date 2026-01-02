@@ -21,6 +21,7 @@ export const useTickets = (params: GetAllTicketsParams) => {
 			params.priority_uuid,
 			params.start_date,
 			params.end_date,
+			params.ticket_status,
 		],
 		queryFn: () => ticketApi.getAllTickets(params),
 		staleTime: 1000 * 60 * 5, // 5 minutes

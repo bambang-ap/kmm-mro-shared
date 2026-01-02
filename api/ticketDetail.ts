@@ -18,7 +18,7 @@ export type GetAllTicketsParams = {
 	sort?: string;
 	order?: 'asc' | 'desc';
 	priority_uuid?: string;
-	status_uuid?: string;
+	ticket_status?: string;
 	start_date?: string;
 	end_date?: string;
 	is_admin?: boolean;
@@ -60,7 +60,7 @@ export const ticketApi = {
 			start_date,
 			end_date,
 			is_admin = true,
-			status_uuid,
+			ticket_status: status_uuid,
 		} = params;
 
 		let url = `${
@@ -74,8 +74,12 @@ export const ticketApi = {
 		if (priority_uuid) {
 			url += `&priority_uuid=${priority_uuid}`;
 		}
-		if (status_uuid) {
-			url += `&status_uuid=${status_uuid}`;
+		if (status_uuid && status_uuid !== 'all') {
+			url += `&ticket_status=${
+				status_uuid === 'request_to_transfer'
+					? 'Request to Transfer'
+					: status_uuid.split('_').join(' ').ucwords()
+			}`;
 		}
 		if (sort && order) {
 			url += `&sort=${sort}&order=${order}`;

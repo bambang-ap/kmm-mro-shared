@@ -1056,7 +1056,7 @@ export interface TicketActivity {
 	status: string;
 	remarks: string;
 	action_timestamp: string;
-	action_by: number;
+	action_by_uuid: string;
 	action_by_name: string;
 	end_date?: string;
 }
