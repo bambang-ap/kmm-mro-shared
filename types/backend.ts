@@ -1012,9 +1012,15 @@ export interface TicketListResponse {
 	};
 }
 
+export enum UploadedAtStage {
+	created = 'created',
+	resolved = 'resolved',
+}
+
 export interface TicketImage {
 	uuid: string;
 	image_url: string;
+	uploaded_at_stage: UploadedAtStage;
 }
 
 export interface TicketDetailData {
