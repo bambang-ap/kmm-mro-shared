@@ -995,6 +995,7 @@ export interface TicketListItem {
 	priority_name: string;
 	requester_name: string;
 	created_at: string;
+	due_date?: string;
 	ticket_status: string;
 }
 
@@ -1015,6 +1016,11 @@ export interface TicketListResponse {
 export enum UploadedAtStage {
 	created = 'created',
 	resolved = 'resolved',
+}
+
+export enum DateFilterType {
+	createdAt = 'created_at',
+	dueDate = 'due_date',
 }
 
 export interface TicketImage {

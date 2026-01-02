@@ -41,7 +41,7 @@ export default async function apiRequest<T>(
 	try {
 		const response = await fetch(url, config);
 
-		if (response.ok) return response.json();
+		if (response.ok) return response.json() as T;
 
 		// Handle 401 Unauthorized - redirect to login
 		const excludedPaths = [
@@ -57,7 +57,7 @@ export default async function apiRequest<T>(
 			const errorData = await response.json().catch(() => ({}));
 
 			throw new Error(
-				errorData.message || `HTTP error! status: ${response.status}`
+				(errorData as any)?.message || `HTTP error! status: ${response.status}`
 			);
 		}
 

@@ -8,6 +8,7 @@ import type {
 	UpdateActivityRequest,
 	UpdateActivityResponse,
 	AssignTicketFormData,
+	DateFilterType,
 } from '../types/backend';
 import apiRequest from './helper';
 
@@ -21,6 +22,7 @@ export type GetAllTicketsParams = {
 	ticket_status?: string;
 	start_date?: string;
 	end_date?: string;
+	date_filter_type?: DateFilterType;
 	is_admin?: boolean;
 };
 
@@ -59,6 +61,7 @@ export const ticketApi = {
 			priority_uuid,
 			start_date,
 			end_date,
+			date_filter_type,
 			is_admin = true,
 			ticket_status: status_uuid,
 		} = params;
@@ -89,6 +92,9 @@ export const ticketApi = {
 		}
 		if (end_date) {
 			url += `&end_date=${end_date}`;
+		}
+		if (date_filter_type) {
+			url += `&date_filter_type=${date_filter_type}`;
 		}
 		return apiRequest<TicketListResponse>(url);
 	},
