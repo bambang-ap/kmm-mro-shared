@@ -108,7 +108,7 @@ const AttachmentGrid: React.FC<AttachmentGridProps> = ({
 						<img
 							src={validAttachments[previewIndex]}
 							alt={`Preview ${previewIndex + 1}`}
-							className="max-w-full max-h-[90vh] object-contain rounded-lg"
+							className="max-w-full max-h-[90vh] shadow-2xl object-contain rounded-lg"
 						/>
 					</div>
 
