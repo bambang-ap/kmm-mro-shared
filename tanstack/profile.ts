@@ -15,12 +15,8 @@ import toast from 'react-hot-toast';
  * PUT /api/v1/users/me/name
  */
 export const useUpdateName = () => {
-	return useMutation<
-		{ Success: boolean; message: string },
-		Error,
-		UpdateNameFormData
-	>({
-		mutationFn: (data) => profileApi.updateName(data),
+	return useMutation({
+		mutationFn: (data: UpdateNameFormData) => profileApi.updateName(data),
 		onSuccess: (response) => {
 			toast.success(response.message || 'Name updated successfully');
 		},

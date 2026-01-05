@@ -1,21 +1,24 @@
 import apiRequest from './helper';
-import type { UpdateNameFormData, ChangePasswordFormData } from '../schemas/profile';
+import type {
+	UpdateNameFormData,
+	ChangePasswordFormData,
+} from '../schemas/profile';
+import { UserResponse } from '@shared/types/backend';
 
 export const profileApi = {
 	/**
 	 * Update User Name
 	 * PUT /api/v1/users/me/name
 	 */
-	updateName: async (
-		data: UpdateNameFormData
-	): Promise<{ Success: boolean; message: string }> => {
-		return apiRequest<{ Success: boolean; message: string }>(
-			'/users/me/name',
-			{
-				method: 'PUT',
-				body: JSON.stringify(data),
-			}
-		);
+	updateName: async (data: UpdateNameFormData) => {
+		return apiRequest<{
+			Success: boolean;
+			message: string;
+			data: UserResponse;
+		}>('/users/me/name', {
+			method: 'PUT',
+			body: JSON.stringify(data),
+		});
 	},
 
 	/**
