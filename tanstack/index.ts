@@ -23,3 +23,4 @@ export * from './ticketPriorities';
 export * from './workCategories';
 export * from './floorAreas';
 export * from './roomAreas';
+export * from './profile';
