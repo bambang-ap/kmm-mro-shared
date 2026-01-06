@@ -1070,7 +1070,7 @@ export interface TicketActivity {
 	uuid: string;
 	activity: string;
 	category: string;
-	status: string;
+	status: BadgeType;
 	remarks: string;
 	action_timestamp: string;
 	action_by_uuid: string;
