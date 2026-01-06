@@ -65,7 +65,7 @@ export const Badge: React.FC<BadgeProps> = ({ status, className = '' }) => {
 				className
 			)}
 		>
-			{status?.split(/\s/).join(' ').ucwords()}
+			{status?.split(/\s/).join(' ').ucwords() || '-'}
 		</span>
 	);
 };
