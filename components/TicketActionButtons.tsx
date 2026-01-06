@@ -2,19 +2,23 @@ import { Button } from '@shared/components/ui';
 import { cn } from '@shared/utils';
 import { type ReactNode } from 'react';
 
+type Actions = Partial<
+	Record<
+		| 'onAcknowledge'
+		| 'onResolve'
+		| 'onTransfer'
+		| 'onEscalate'
+		| 'onReject'
+		| 'onRejectTransfer'
+		| 'onPending'
+		| 'onResume'
+		| 'onAssign'
+		| 'onReAssign',
+		NoopVoid | false
+	>
+>;
 export interface TicketActionButtonsProps {
-	actions?: {
-		onAcknowledge?: () => void;
-		onResolve?: () => void;
-		onTransfer?: () => void;
-		onEscalate?: () => void;
-		onReject?: () => void;
-		onRejectTransfer?: () => void;
-		onPending?: () => void;
-		onResume?: () => void;
-		onAssign?: () => void;
-		onReAssign?: () => void;
-	};
+	actions?: Actions;
 	containerClass?: string;
 	className?: string;
 	renderButton?: (action: {
@@ -102,18 +106,21 @@ const TicketActionButtons = ({
 		<div
 			className={cn('flex justify-end gap-2 mb-4 flex-wrap', containerClass)}
 		>
-			{availableActions.map((config) =>
-				renderButton ? (
-					renderButton({
+			{availableActions.map((config) => {
+				const onClick = config.handler || noopVoid;
+
+				if (renderButton)
+					return renderButton({
 						key: config.key,
 						label: config.label,
 						color: config.color,
-						onClick: config.handler!,
-					})
-				) : (
+						onClick,
+					});
+
+				return (
 					<Button
 						key={config.key}
-						onClick={config.handler}
+						onClick={onClick}
 						className={cn(
 							config.color,
 							'text-white px-4 py-2 rounded',
@@ -122,8 +129,8 @@ const TicketActionButtons = ({
 					>
 						{config.label}
 					</Button>
-				)
-			)}
+				);
+			})}
 		</div>
 	);
 };

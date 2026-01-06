@@ -1048,7 +1048,7 @@ export interface TicketDetailData {
 	priority_id: number;
 	priority_name: BadgeType;
 	assigned_to: string | null;
-	assign_type: string | null;
+	assign_type: AssignType | null;
 	assignee_name: string | null;
 	assignee_display_name: string | null;
 	due_sla_response: string;
