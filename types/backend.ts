@@ -997,6 +997,7 @@ export interface TicketListItem {
 	created_at: string;
 	due_date?: string;
 	ticket_status: string;
+	assignee_display_name: string;
 }
 
 export interface TicketListResponse {
