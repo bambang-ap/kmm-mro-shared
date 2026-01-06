@@ -31,6 +31,7 @@ export const Button: React.FC<ButtonProps> = ({
 
 	return (
 		<button
+			type="button"
 			className={cn(
 				'hover:-translate-y-0.5',
 				baseStyles,
