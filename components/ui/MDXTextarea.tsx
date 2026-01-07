@@ -75,6 +75,7 @@ interface MDXTextareaProps {
 	readOnly?: boolean;
 	placeholder?: string;
 	maxLength?: number;
+	rows?: number;
 	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 	asHtml?: boolean;
@@ -91,11 +92,15 @@ const MDXTextareaEditor = React.forwardRef<MDXEditorMethods, MDXTextareaProps>(
 			readOnly = false,
 			placeholder,
 			maxLength,
+			rows = 4,
 			onChange,
 			onBlur,
 		},
 		ref
 	) {
+		// Calculate height based on rows (1 row = 24px)
+		const minHeight = `${2 * 25 + (readOnly ? 0 : 36)}px`;
+		const maxHeight = `${rows * 25 + (readOnly ? 0 : 36)}px`;
 		// Editor mode: form integration
 		const localForm = useForm({ defaultValues: { localName: value } });
 		const rootForm = useFormContext();
@@ -160,6 +165,7 @@ const MDXTextareaEditor = React.forwardRef<MDXEditorMethods, MDXTextareaProps>(
 					</label>
 				)}
 				<div
+					style={{ minHeight, maxHeight }}
 					className={`w-full border rounded-lg transition-colors duration-300 focus-within:border-primary overflow-hidden ${
 						errorText ? 'border-red-500' : 'border-gray-300'
 					} ${disabled ? 'opacity-50 cursor-not-allowed bg-gray-50' : ''}`}
@@ -171,7 +177,7 @@ const MDXTextareaEditor = React.forwardRef<MDXEditorMethods, MDXTextareaProps>(
 						onBlur={handleBlur}
 						readOnly={isReadOnly}
 						placeholder={placeholder}
-						contentEditableClassName="prose prose-sm prose-a:text-blue-600 prose-a:underline max-w-none min-h-[120px] px-3 py-2 focus:outline-none"
+						contentEditableClassName={`prose prose-sm prose-a:text-blue-600 prose-a:underline max-w-none px-3 py-2 focus:outline-none`}
 						plugins={[
 							headingsPlugin(),
 							listsPlugin(),
@@ -212,8 +218,8 @@ const MDXTextarea = React.forwardRef<MDXEditorMethods, MDXTextareaProps>(
 		if (asHtml) {
 			return (
 				<div
-					className="text-sm text-gray-700 [&_ul]:list-disc [&_ul]:ml-5 [&_ol]:list-decimal [&_ol]:ml-5 [&_li]:mt-1"
 					dangerouslySetInnerHTML={{ __html: parseMarkdown(value || '') }}
+					className="text-sm text-gray-700 [&_ul]:list-disc [&_ul]:ml-5 [&_ol]:list-decimal [&_ol]:ml-5 [&_li]:mt-1"
 				/>
 			);
 		}
