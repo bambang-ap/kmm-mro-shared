@@ -23,8 +23,6 @@ marked.use({
 	gfm: true, // Enable GitHub Flavored Markdown (includes task lists)
 	renderer: {
 		link({ href, title, text }) {
-			console.log(href);
-
 			const titleAttr = title ? ` title="${title}"` : '';
 			return `<a href="${href}"${titleAttr} target="_blank" rel="noopener noreferrer" class="text-blue-600 underline">${text}</a>`;
 		},
