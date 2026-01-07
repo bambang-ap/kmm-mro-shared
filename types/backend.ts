@@ -1073,6 +1073,7 @@ export interface TicketActivity {
 	category: string;
 	status: BadgeType;
 	remarks: string;
+	completed_at: string;
 	action_timestamp: string;
 	action_by_uuid: string;
 	action_by_name: string;
