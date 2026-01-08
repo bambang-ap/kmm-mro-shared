@@ -150,22 +150,7 @@ export const ticketApi = {
 	 * Get Ticket Status Count
 	 * GET /api/v1/admin/tickets/status-count
 	 */
-	getStatusCount: async (
-		search?: string,
-		isAdmin = true
-	): Promise<{
-		success: boolean;
-		message: string;
-		data: {
-			all: number;
-			open: number;
-			request_to_transfer: number;
-			in_progress: number;
-			pending: number;
-			breach: number;
-			resolved: number;
-		};
-	}> => {
+	getStatusCount: async (search?: string, isAdmin = true) => {
 		return apiRequest<{
 			success: boolean;
 			message: string;
@@ -177,6 +162,8 @@ export const ticketApi = {
 				pending: number;
 				breach: number;
 				resolved: number;
+				assigned: number;
+				reject: number;
 			};
 		}>(
 			`${isAdmin ? '/admin' : ''}/tickets/status-count${
