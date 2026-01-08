@@ -91,7 +91,7 @@ const MDXTextareaEditor = React.forwardRef<MDXEditorMethods, MDXTextareaProps>(
 			disabled = false,
 			readOnly = false,
 			placeholder,
-			maxLength,
+			maxLength = 200,
 			rows = 4,
 			onChange,
 			onBlur,
