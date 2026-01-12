@@ -5,8 +5,7 @@ import { XIcon } from '@phosphor-icons/react';
 import 'react-calendar/dist/Calendar.css';
 import './DateRangeFilter.css';
 
-type ValuePiece = Date | null;
-type Value = ValuePiece | [ValuePiece, ValuePiece];
+type CalendarValue = Date | Date[] | null | [Date | null, Date | null];
 
 interface DateRangeFilterProps {
 	isOpen: boolean;
@@ -25,42 +24,65 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
 	initialStartDate,
 	initialEndDate,
 }) => {
-	const [dateRange, setDateRange] = useState<Value>(null);
+	const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
+	const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
 
 	useEffect(() => {
 		if (isOpen) {
 			// Initialize with current values when modal opens
 			if (initialStartDate && initialEndDate) {
-				setDateRange([parseISO(initialStartDate), parseISO(initialEndDate)]);
+				setSelectedStartDate(parseISO(initialStartDate));
+				setSelectedEndDate(parseISO(initialEndDate));
 			} else {
-				setDateRange(null);
+				setSelectedStartDate(null);
+				setSelectedEndDate(null);
 			}
 		}
 	}, [isOpen, initialStartDate, initialEndDate]);
 
-	const handleApply = () => {
-		if (dateRange && Array.isArray(dateRange)) {
-			const [start, end] = dateRange;
-			if (start && end) {
-				const startStr = format(start, 'yyyy-MM-dd');
-				const endStr = format(end, 'yyyy-MM-dd');
-				onApply(startStr, endStr);
+	const handleDateClick = (value: CalendarValue) => {
+		if (!value) return;
+
+		const date = Array.isArray(value) ? value[0] : value;
+		if (!date) return;
+
+		if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
+			// Start new selection
+			setSelectedStartDate(date);
+			setSelectedEndDate(null);
+		} else {
+			// Complete the range
+			if (date >= selectedStartDate) {
+				setSelectedEndDate(date);
+			} else {
+				// If clicked date is before start, swap them
+				setSelectedEndDate(selectedStartDate);
+				setSelectedStartDate(date);
 			}
 		}
 	};
 
+	const handleApply = () => {
+		if (selectedStartDate) {
+			const startStr = format(selectedStartDate, 'yyyy-MM-dd');
+			const endStr = selectedEndDate
+				? format(selectedEndDate, 'yyyy-MM-dd')
+				: startStr;
+			onApply(startStr, endStr);
+			onClose();
+		}
+	};
+
 	const handleReset = () => {
-		setDateRange(null);
+		setSelectedStartDate(null);
+		setSelectedEndDate(null);
 		onReset?.();
 		onClose();
 	};
 
 	if (!isOpen) return null;
 
-	const [startDate, endDate] = Array.isArray(dateRange)
-		? dateRange
-		: [null, null];
-	const isRangeSelected = startDate && endDate;
+	const isDateSelected = !!selectedStartDate;
 
 	return (
 		<div
@@ -86,13 +108,17 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
 						<div className="flex-1">
 							<div className="text-xs text-gray-500 mb-1">From</div>
 							<div className="text-sm font-medium text-gray-800">
-								{startDate ? format(startDate, 'EEE, dd MMM') : 'Select date'}
+								{selectedStartDate
+									? format(selectedStartDate, 'EEE, dd MMM')
+									: 'Select date'}
 							</div>
 						</div>
 						<div className="flex-1">
 							<div className="text-xs text-gray-500 mb-1">To</div>
 							<div className="text-sm font-medium text-gray-800">
-								{endDate ? format(endDate, 'EEE, dd MMM') : 'Select date'}
+								{selectedEndDate
+									? format(selectedEndDate, 'EEE, dd MMM')
+									: 'Select date'}
 							</div>
 						</div>
 					</div>
@@ -101,9 +127,13 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
 				{/* Calendar */}
 				<div className="p-4">
 					<Calendar
-						onChange={setDateRange}
-						value={dateRange}
-						selectRange={true}
+						onChange={handleDateClick}
+						value={
+							selectedStartDate && selectedEndDate
+								? [selectedStartDate, selectedEndDate]
+								: selectedStartDate
+						}
+						selectRange={false}
 						className="custom-calendar"
 						locale="en-US"
 						showNeighboringMonth={false}
@@ -124,11 +154,11 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
 					</button>
 					<button
 						onClick={handleApply}
-						disabled={!isRangeSelected}
+						disabled={!isDateSelected}
 						className="flex-1 px-4 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-teal-600"
 						style={{
-							backgroundColor: isRangeSelected ? '#00B2A0' : '#e0e0e0',
-							color: isRangeSelected ? 'white' : '#9ca3af',
+							backgroundColor: isDateSelected ? '#00B2A0' : '#e0e0e0',
+							color: isDateSelected ? 'white' : '#9ca3af',
 						}}
 					>
 						Apply
