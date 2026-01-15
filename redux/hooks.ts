@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import type { AppStore, RootState } from './store';
 
