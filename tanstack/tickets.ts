@@ -1,5 +1,9 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { GetAllTicketsParams, ticketApi } from '../api';
+import {
+	type GetAllTicketsParams,
+	type TicketExportParams,
+	ticketApi,
+} from '../api';
 import { QUERY_KEYS } from '../constants/queryKey';
 import { queryClient } from './index';
 import type {
@@ -280,6 +284,22 @@ export const useCreateTicket = () => {
 			queryClient.invalidateQueries({
 				queryKey: QUERY_KEYS.TICKET_STATUS_COUNT,
 			});
+		},
+	});
+};
+
+export const useExportTickets = () => {
+	return useMutation({
+		mutationFn: (params: TicketExportParams) => ticketApi.exportTickets(params),
+		onSuccess: (blob) => {
+			const url = window.URL.createObjectURL(blob);
+			const link = document.createElement('a');
+			link.href = url;
+			link.download = `tickets-export-${new Date().toISOString().split('T')[0]}.xlsx`;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+			window.URL.revokeObjectURL(url);
 		},
 	});
 };

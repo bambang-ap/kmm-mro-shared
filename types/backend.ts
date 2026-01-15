@@ -998,6 +998,8 @@ export interface TicketListItem {
 	due_date?: string;
 	ticket_status: string;
 	assignee_display_name: string;
+	store_name?: string;
+	floor_area_name?: string;
 }
 
 export interface TicketListResponse {

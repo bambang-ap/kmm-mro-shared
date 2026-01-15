@@ -12,6 +12,16 @@ import type {
 } from '../types/backend';
 import apiRequest from './helper';
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+const USER_AGENT = import.meta.env.VITE_USER_AGENT;
+
+export type TicketExportParams = {
+	priority_uuid?: string;
+	store_uuid?: string;
+	start_date?: string;
+	end_date?: string;
+};
+
 export type GetAllTicketsParams = {
 	page: number;
 	page_size: number;
@@ -418,5 +428,47 @@ export const ticketApi = {
 				method: 'DELETE',
 			}
 		);
+	},
+
+	/**
+	 * Export Tickets to Excel
+	 * GET /api/v1/admin/tickets/export
+	 */
+	exportTickets: async (params: TicketExportParams): Promise<Blob> => {
+		const queryParts: string[] = [];
+
+		if (params.priority_uuid) {
+			queryParts.push(`priority_uuid=${params.priority_uuid}`);
+		}
+		if (params.store_uuid) {
+			queryParts.push(`store_uuid=${params.store_uuid}`);
+		}
+		if (params.start_date) {
+			queryParts.push(`start_date=${params.start_date}`);
+		}
+		if (params.end_date) {
+			queryParts.push(`end_date=${params.end_date}`);
+		}
+
+		const queryString = queryParts.length > 0 ? `?${queryParts.join('&')}` : '';
+		const url = `${BASE_URL}/admin/tickets/export${queryString}`;
+
+		const token = localStorage.getItem('access_token');
+		const headers: HeadersInit = {
+			'User-Application': USER_AGENT,
+			'User-Language': localStorage.getItem('language')!,
+		};
+
+		if (token) {
+			headers['Authorization'] = `Bearer ${token}`;
+		}
+
+		const response = await fetch(url, { headers });
+
+		if (!response.ok) {
+			throw new Error(`Export failed: ${response.status}`);
+		}
+
+		return response.blob();
 	},
 };
