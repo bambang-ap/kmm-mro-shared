@@ -91,4 +91,34 @@ export const QUERY_KEYS = {
 
 	// Assignees
 	ASSIGNEES: ['assignees'] as const,
+
+	// Dashboard
+	DASHBOARD: ['dashboard'] as const,
+	get DASHBOARD_TICKET_STATUS_PRIORITY() {
+		return [...this.DASHBOARD, 'ticket-status-priority'] as const;
+	},
+	get DASHBOARD_WORK_CATEGORY_CONTRIBUTION() {
+		return [...this.DASHBOARD, 'work-category-contribution'] as const;
+	},
+	get DASHBOARD_TOP_STORES() {
+		return [...this.DASHBOARD, 'top-stores'] as const;
+	},
+	get DASHBOARD_FLOOR_AREA_DISTRIBUTION() {
+		return [...this.DASHBOARD, 'floor-area-distribution'] as const;
+	},
+	get DASHBOARD_STORE_WORK_CATEGORY_DISTRIBUTION() {
+		return [...this.DASHBOARD, 'store-work-category-distribution'] as const;
+	},
+	get DASHBOARD_TREND_TOTAL_REQUEST() {
+		return [...this.DASHBOARD, 'trend-total-request'] as const;
+	},
+	get DASHBOARD_AVERAGE_MAINTENANCE_DURATION() {
+		return [...this.DASHBOARD, 'average-maintenance-duration'] as const;
+	},
+	get DASHBOARD_PREPARATION_SLA_AVERAGE() {
+		return [...this.DASHBOARD, 'preparation-sla-average'] as const;
+	},
+	get DASHBOARD_FIXING_SLA_AVERAGE() {
+		return [...this.DASHBOARD, 'fixing-sla-average'] as const;
+	},
 };

@@ -24,3 +24,4 @@ export * from './workCategories';
 export * from './floorAreas';
 export * from './roomAreas';
 export * from './profile';
+export * from './dashboard';

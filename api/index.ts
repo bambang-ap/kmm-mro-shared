@@ -1100,6 +1100,12 @@ export * from './profile';
 
 export * from './ticketDetail';
 
+// ============================================================================
+// DASHBOARD API SERVICE
+// ============================================================================
+
+export * from './dashboard';
+
 // Export all API services
 export default {
 	auth: authApi,
