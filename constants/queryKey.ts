@@ -121,4 +121,7 @@ export const QUERY_KEYS = {
 	get DASHBOARD_FIXING_SLA_AVERAGE() {
 		return [...this.DASHBOARD, 'fixing-sla-average'] as const;
 	},
+	get DASHBOARD_SLA_RESOLUTION_STATS() {
+		return [...this.DASHBOARD, 'sla-resolution-stats'] as const;
+	},
 };

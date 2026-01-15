@@ -13,6 +13,7 @@ import {
 	type WorkCategoryContributionResponse,
 	type StoreWorkCategoryDistributionResponse,
 	type AverageMaintenanceDurationResponse,
+	type SLAResolutionStatsResponse,
 } from '../api/dashboard';
 import { QUERY_KEYS } from '../constants/queryKey';
 
@@ -237,6 +238,29 @@ export const useFixingSLAAverage = (params?: DashboardFilterParams) => {
 					average: Math.round(average * 100) / 100,
 					unit: 'hours',
 				},
+			};
+		},
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const useSLAResolutionStats = (params?: DashboardFilterParams) => {
+	return useQuery<SLAResolutionStatsResponse>({
+		queryKey: [...QUERY_KEYS.DASHBOARD_SLA_RESOLUTION_STATS, params],
+		queryFn: async () => {
+			const response = await dashboardApi.getSLAResolutionStats(params);
+
+			return {
+				success: response.success,
+				message: response.message,
+				data: response.data.data.map((item) => ({
+					priority_name: item.priority_name,
+					sla_target: item.sla_target,
+					lowest: item.lowest_days,
+					highest: item.highest_days,
+					average_time: item.average_days,
+					total_tickets: item.total_tickets,
+				})),
 			};
 		},
 		staleTime: 1000 * 60 * 5,

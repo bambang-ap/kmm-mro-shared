@@ -274,6 +274,36 @@ export interface FixingSLAAverageResponse {
 	};
 }
 
+// Actual API response type
+export interface SLAResolutionStatsApiResponse {
+	success: boolean;
+	message: string;
+	data: {
+		data: {
+			priority_name: string;
+			sla_target: number;
+			lowest_days: number;
+			highest_days: number;
+			average_days: number;
+			total_tickets: number;
+		}[];
+	};
+}
+
+// Normalized type used in components
+export interface SLAResolutionStatsResponse {
+	success: boolean;
+	message: string;
+	data: {
+		priority_name: string;
+		sla_target: number;
+		lowest: number;
+		highest: number;
+		average_time: number;
+		total_tickets: number;
+	}[];
+}
+
 // ============================================================================
 // HELPER FUNCTION
 // ============================================================================
@@ -405,6 +435,19 @@ export const dashboardApi = {
 		const queryString = buildQueryString(params || {});
 		return apiRequest<FixingSLAAverageApiResponse>(
 			`/dashboard/fixing-sla-average${queryString}`
+		);
+	},
+
+	/**
+	 * Get SLA Resolution Stats
+	 * GET /api/v1/dashboard/sla-resolution-stats
+	 */
+	getSLAResolutionStats: async (
+		params?: DashboardFilterParams
+	): Promise<SLAResolutionStatsApiResponse> => {
+		const queryString = buildQueryString(params || {});
+		return apiRequest<SLAResolutionStatsApiResponse>(
+			`/dashboard/sla-resolution-stats${queryString}`
 		);
 	},
 };
