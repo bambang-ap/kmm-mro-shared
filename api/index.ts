@@ -952,7 +952,8 @@ export const userApi = {
 		pageSize: number = 10,
 		search?: string,
 		sortBy?: string,
-		sortOrder?: 'ASC' | 'DESC'
+		sortOrder?: 'ASC' | 'DESC',
+		store_uuid?: string
 	): Promise<UserListResponse> => {
 		let url = `/users/active?page=${page}&page_size=${pageSize}`;
 		if (sortBy && sortOrder) {
@@ -962,6 +963,9 @@ export const userApi = {
 			const searchTerm = encodeURIComponent(search.trim());
 			// Search across multiple fields
 			url += `&search=${searchTerm}`;
+		}
+		if (store_uuid) {
+			url += `&store_uuid=${store_uuid}`;
 		}
 		return apiRequest<UserListResponse>(url);
 	},

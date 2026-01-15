@@ -24,7 +24,8 @@ export const useGetUsers = (
 	pageSize: number = 10,
 	search?: string,
 	sortBy?: string,
-	sortOrder?: 'ASC' | 'DESC'
+	sortOrder?: 'ASC' | 'DESC',
+	store_uuid?: string
 ) => {
 	return useQuery<UserListResponse>({
 		queryKey: [
@@ -34,9 +35,17 @@ export const useGetUsers = (
 			search,
 			sortBy,
 			sortOrder,
+			store_uuid,
 		],
 		queryFn: () =>
-			userApi.getAllUsers(page, pageSize, search, sortBy, sortOrder),
+			userApi.getAllUsers(
+				page,
+				pageSize,
+				search,
+				sortBy,
+				sortOrder,
+				store_uuid
+			),
 		staleTime: 300000, // 5 minutes
 	});
 };
